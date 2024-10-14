@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Colors from "@/constants/Colors";
 import React from 'react';
-import { Ionicons } from '@expo/vector-icons'; // Ensure you have this package installed
+import { Ionicons } from '@expo/vector-icons'; 
 import { useRouter } from 'expo-router';
 
 const Account = () => {
@@ -13,6 +13,11 @@ const Account = () => {
       <TouchableOpacity onPress={() => router.push('/Settings')} style={styles.settingsIcon}>
         <Ionicons name="settings-outline" size={24} color={Colors.colors.text} />
       </TouchableOpacity>
+      <View style={styles.footer}>
+        <TouchableOpacity onPress={() => router.push('/')}>
+          <Text style={styles.logoutLink}>Log Out</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -20,21 +25,32 @@ const Account = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'flex-start', // Align items to the top
+        justifyContent: 'space-between', // Keep title at the top and push footer down
         alignItems: 'flex-start', // Align items to the left
         backgroundColor: Colors.colors.background,
-        padding: 20, // Add some padding
+        padding: 20,
     },
     text: {
         fontSize: 24,
         fontWeight: 'bold',
         color: Colors.colors.text,
-        marginTop: 40, // Use margin instead of top
+        marginTop: 40,
     },
     settingsIcon: {
         position: 'absolute',
-        top: 60, // Adjust the vertical position
+        top: 60,
         right: 30,
+    },
+    footer: {
+      justifyContent: 'center', // Center content in footer
+      alignItems: 'center', // Center horizontally
+      marginBottom: 20, // Add some space from the bottom
+      width: '100%', // Ensure it takes full width
+    },
+    logoutLink: {
+      color: 'lightblue',
+      fontWeight: 'bold',
+      fontSize: 20,
     },
 });
 

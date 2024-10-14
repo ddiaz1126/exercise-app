@@ -1,11 +1,14 @@
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import Colors from "@/constants/Colors";
 import React from 'react';
+import { Ionicons } from '@expo/vector-icons'; // Import icons for the plus sign
+import { useRouter } from 'expo-router';
 
 const Dashboard = () => {
   // Get the current month and year
   const currentDate = new Date();
   const monthYear = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+  const router = useRouter(); // Initialize the router
 
   // Calculate the start of the week (Sunday)
   const startOfWeek = new Date(currentDate);
@@ -48,6 +51,11 @@ const Dashboard = () => {
       </View>
       <Text style={styles.previousWorkoutsText}>Previous Workouts</Text>
       {/* You can add a list or additional content here for previous workouts */}
+
+      {/* Floating Plus Button */}
+      <TouchableOpacity style={styles.floatingButton} onPress={() => router.push('/workoutsView')}>
+        <Ionicons name="add" size={30} color="white" />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -121,7 +129,25 @@ const styles = StyleSheet.create({
     marginTop: 20, // Space above the label
     marginLeft: 0, // Align with other text
   },
+  // Floating Button Styles
+  floatingButton: {
+    position: 'absolute', // Make the button float
+    bottom: 30, // Distance from the bottom of the screen
+    right: 30, // Distance from the right of the screen
+    backgroundColor: Colors.colors.primary,
+    width: 60,
+    height: 60,
+    borderRadius: 30, // Make the button circular
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // Shadow for Android
+  },
 });
 
 export default Dashboard;
+
 

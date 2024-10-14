@@ -5,7 +5,10 @@ export default function RootLayout() {
         <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="index" options={{  headerShown: false }} />
-
+            <Stack.Screen name="signup" options={{  headerShown: false }} />
+            <Stack.Screen name="addExercise" options={{  headerShown: false }} />
+            <Stack.Screen name="addWorkout" options={{  headerShown: false }} />
+            <Stack.Screen name="workoutsView" options={{  headerShown: false }} />
         </Stack>
     );
 }

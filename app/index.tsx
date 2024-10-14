@@ -1,13 +1,33 @@
 import React, { useState } from 'react';
-import { StatusBar, StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { StatusBar, StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import CustomButton from '@/components/CustomButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { validateClient } from '@/utils/database'; // Import validateClient function
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Ensure this is imported
 
 const App = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const handleLogin = async () => {
+    try {
+      const user = await validateClient(email, password);
+      if (user) {
+        // Retrieve and log the token
+        const token = await AsyncStorage.getItem('userToken');
+        console.log('Token stored:', token); // Check if the token matches
+        Alert.alert('Success', 'Login successful');
+        router.push('/Dashboard'); 
+      } else {
+        Alert.alert('Error', 'Invalid email or password');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      Alert.alert('Error', 'An error occurred during login');
+    }
+  };
 
   return (
     <>
@@ -37,9 +57,8 @@ const App = () => {
             />
           </View>
           <CustomButton
-            onPress={() => router.push('/Dashboard')}
+            onPress={handleLogin} // Update to call handleLogin
             title="Login"
-            style={styles.button}
           />
           <View style={styles.signupContainer}>
             <Text style={styles.signupText}>
@@ -91,9 +110,9 @@ const styles = StyleSheet.create({
     width: '10%',
   },
   signupContainer: {
-    flexDirection: 'row', // Aligns text and link in a row
+    flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 40, // Adjust this value as needed
+    marginTop: 40,
   },
   signupText: {
     color: 'white',

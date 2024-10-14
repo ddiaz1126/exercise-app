@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import Colors from "@/constants/Colors";
 import { useRouter } from 'expo-router';
 import { addClient } from '@/utils/database'; // Ensure this imports the correct addClient function
@@ -31,7 +31,7 @@ const SignUp = () => {
     try {
       await addClient(name, username, email, password);
       Alert.alert('Success', 'Account created successfully');
-      router.push('/login'); 
+      router.push('/'); 
     } catch (error) {
       console.error('Sign Up error:', error);
       Alert.alert('Error', 'Failed to create account');
@@ -76,7 +76,16 @@ const SignUp = () => {
         secureTextEntry
       />
       <Button title="Sign Up" onPress={handleSignUp} color={Colors.colors.buttonBackground} />
+      <View style={styles.loginContainer}>
+            <Text style={styles.loginText}>
+              Have an account already?{' '}
+            </Text>
+            <TouchableOpacity onPress={() => router.push('/')}>
+              <Text style={styles.loginLink}>Log In</Text>
+            </TouchableOpacity>
+          </View>
     </View>
+    
   );
 };
 
@@ -102,6 +111,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     color: Colors.colors.text,
     backgroundColor: Colors.colors.dark,
+  },
+  loginContainer: {
+    flexDirection: 'row', // Aligns text and link in a row
+    justifyContent: 'center',
+    marginTop: 40, // Adjust this value as needed
+  },
+  loginText: {
+    color: 'white',
+  },
+  loginLink: {
+    color: 'lightblue',
+    fontWeight: 'bold',
   },
 });
 
