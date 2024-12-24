@@ -64,7 +64,7 @@ const App = () => {
             <Text style={styles.signupText}>
               Don't have an account yet?{' '}
             </Text>
-            <TouchableOpacity onPress={() => router.push('/signup')}>
+            <TouchableOpacity onPress={() => router.push('/Dashboard')}>
               <Text style={styles.signupLink}>Sign Up</Text>
             </TouchableOpacity>
           </View>

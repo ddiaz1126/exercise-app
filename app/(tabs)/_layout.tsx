@@ -16,9 +16,9 @@ const TabsLayout = () => {
             }}
         >
             <Tabs.Screen
-                name="exercises"
+                name="runs"
                 options={{  
-                    tabBarLabel: "Exercises",
+                    tabBarLabel: "MyRuns",
                     tabBarIcon: ({ color }) => (
                         <Entypo
                             name="man"

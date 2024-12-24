@@ -18,7 +18,7 @@ const Exercises = () => {
       setLoading(true);
       const token = await AsyncStorage.getItem('userToken'); // Retrieve the token
       try {
-        const response = await fetch('http://10.0.0.103:8000/api/exercises/', {
+        const response = await fetch('http://127.0.0.1:8000/api/exercises/', {
           headers: {
             Authorization: `Token ${token}`, // Include the token in the headers
           },
