@@ -1,15 +1,15 @@
-import React from 'react';
-import { View, Text, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Dimensions, StyleSheet, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import Colors from "@/constants/Colors";
-import { Ionicons } from '@expo/vector-icons'; // Import icons for the plus sign
-import { VictoryChart, VictoryLine, VictoryTheme, VictoryAxis } from 'victory-native';
-import { VictoryPie } from 'victory-native';  // Import the VictoryPie component
+import { Ionicons } from '@expo/vector-icons';
+import { VictoryChart, VictoryLine, VictoryTheme, VictoryAxis, VictoryScatter, VictoryArea, VictoryLabel } from 'victory-native';
+import { VictoryPie } from 'victory-native';
+import TypeWriter from 'react-native-typewriter';
 
-// Get screen width dynamically
 const { width } = Dimensions.get('window');
 
 // Responsive chart width and height
-const chartWidth = width * 0.9;  // 90% of screen width
+const chartWidth = width * 0.9;  // 90% of screen width, not full screen width
 const chartHeight = chartWidth * 0.5;  // 50% of chart width
 
 // Function to generate random fluctuations for data points
@@ -21,11 +21,13 @@ const addFluctuations = (data, fluctuationRange = 5) => {
 };
 
 const RunsVisualization = () => {
+  const [activeIndex, setActiveIndex] = useState(0);  // Active index for the slide
+
   // Base data: Time (in seconds or Unix timestamps) and heart rate values (120-180)
   const heartRateData = [
     { x: new Date(2024, 0, 1, 12, 0, 0), y: 130 },
-    { x: new Date(2024, 0, 1, 12, 1, 0), y: 135 },
-    { x: new Date(2024, 0, 1, 12, 2, 0), y: 128 },
+    { x: new Date(2024, 0, 1, 12, 1, 0), y: 80 },
+    { x: new Date(2024, 0, 1, 12, 2, 0), y: 160 },
     { x: new Date(2024, 0, 1, 12, 3, 0), y: 148 },
     { x: new Date(2024, 0, 1, 12, 4, 0), y: 170 },
   ];
@@ -34,9 +36,9 @@ const RunsVisualization = () => {
   const paceData = [
     { x: new Date(2024, 0, 1, 12, 0, 0), y: 5.3 },  // Pace in minutes/km
     { x: new Date(2024, 0, 1, 12, 1, 0), y: 5.2 },
-    { x: new Date(2024, 0, 1, 12, 2, 0), y: 5.1 },
-    { x: new Date(2024, 0, 1, 12, 3, 0), y: 5.0 },
-    { x: new Date(2024, 0, 1, 12, 4, 0), y: 4.9 },
+    { x: new Date(2024, 0, 1, 12, 2, 0), y: 3.1 },
+    { x: new Date(2024, 0, 1, 12, 3, 0), y: 4.3 },
+    { x: new Date(2024, 0, 1, 12, 4, 0), y: 4.0 },
   ];
 
   // Add fluctuations to data
@@ -51,16 +53,153 @@ const RunsVisualization = () => {
     { x: 'High', y: 30 },
   ];
 
+  const chartsData = [
+    {
+      id: 1,
+      component: (
+        <VictoryChart theme={VictoryTheme.material} width={chartWidth} height={chartHeight} domainPadding={20}>
+
+            <VictoryLabel
+                text="Heart Rate Over Time"
+                x={170} // Positioning the label (adjust x for center, y for height)
+                y={20} // Position it above the chart
+                style={{
+                fontSize: 16,
+                fontWeight: 'bold',
+                fill: Colors.colors.text,
+                textAnchor: 'middle',  // Center the title
+                }}
+            />
+          <VictoryAxis
+            tickFormat={(t) => new Date(t).toLocaleTimeString()} // Format time on x-axis
+            tickCount={3}
+            style={{
+              axis: { stroke: Colors.colors.text },
+              axisLabel: { fontSize: 12, padding: 30, fill: Colors.colors.text },
+              ticks: { stroke: Colors.colors.text, size: 5 },
+              tickLabels: { fontSize: 10, fill: Colors.colors.text },
+              grid: { stroke: 'none' }, // Remove gridlines
+            }}
+          />
+          <VictoryAxis
+            dependentAxis
+            domain={[120, 180]} // Set the y-axis range from 120 to 180
+            tickCount={4}
+            style={{
+              axis: { stroke: Colors.colors.text },
+              axisLabel: { fontSize: 10, padding: 30, fill: Colors.colors.text },
+              ticks: { stroke: Colors.colors.text, size: 5 },
+              tickLabels: { fontSize: 10, fill: Colors.colors.text },
+              grid: { stroke: 'none' }, // Remove gridlines
+            }}
+          />
+          {/* Add shaded area under the line */}
+          <VictoryArea
+            data={fluctuatedHeartRateData}
+            style={{
+              data: { fill: 'blue', fillOpacity: 0.2 },  // Blue shading under the line with some opacity
+            }}
+          />
+          <VictoryLine
+            data={fluctuatedHeartRateData}
+            style={{
+              data: { stroke: 'blue', strokeWidth: 3 },
+            }}
+          />
+          {/* Add markers on the data points */}
+          <VictoryScatter
+            data={fluctuatedHeartRateData}
+            size={3}
+            style={{
+              data: { fill: 'lightblue' }, // Marker color
+            }}
+          />
+        </VictoryChart>
+      ),
+    },
+    {
+      id: 2,
+      component: (
+        <VictoryChart theme={VictoryTheme.material} width={chartWidth} height={chartHeight} domainPadding={20}>
+            <VictoryLabel
+                text="Pace Over Time"
+                x={170} // Positioning the label (adjust x for center, y for height)
+                y={20} // Position it above the chart
+                style={{
+                fontSize: 16,
+                fontWeight: 'bold',
+                fill: Colors.colors.text,
+                textAnchor: 'middle',  // Center the title
+                }}
+            />
+          <VictoryAxis
+            tickFormat={(t) => new Date(t).toLocaleTimeString()} // Format time on x-axis
+            tickCount={4}
+            style={{
+              axis: { stroke: Colors.colors.text },
+              axisLabel: { fontSize: 12, padding: 10, fill: Colors.colors.text },
+              ticks: { stroke: Colors.colors.text, size: 5 },
+              tickLabels: { fontSize: 10, fill: Colors.colors.text },
+              grid: { stroke: 'none' }, // Remove gridlines
+            }}
+          />
+          <VictoryAxis
+            dependentAxis
+            // label="Pace (min/km)"
+            tickCount={4}
+            style={{
+              axis: { stroke: Colors.colors.text },
+              axisLabel: { fontSize: 12, padding: 30, fill: Colors.colors.text },
+              ticks: { stroke: Colors.colors.text, size: 5 },
+              tickLabels: { fontSize: 10, fill: Colors.colors.text },
+              grid: { stroke: 'none' }, // Remove gridlines
+            }}
+          />
+          {/* Add shaded area under the line */}
+          <VictoryArea
+            data={fluctuatedPaceData}
+            style={{
+              data: { fill: 'green', fillOpacity: 0.2 },  // Green shading under the line with some opacity
+            }}
+          />
+          <VictoryLine
+            data={fluctuatedPaceData}
+            style={{
+              data: { stroke: 'green', strokeWidth: 3 },
+            }}
+          />
+          {/* Add markers on the data points */}
+          <VictoryScatter
+            data={fluctuatedPaceData}
+            size={3}
+            style={{
+              data: { fill: 'lightgreen' }, // Marker color
+            }}
+          />
+        </VictoryChart>
+      ),
+    },
+  ];
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Your Last Run</Text>
 
       {/* Total Duration and Calories Burned Containers */}
       <View style={styles.infoContainer}>
-        <View>
-          <Text style={styles.infoText}>Distance: 2 miles</Text>
-          <Text style={styles.infoText}>Duration: 25 mins</Text>
-          <Text style={styles.infoText}>Calories Burned: 300 kcal</Text>
+      <View>
+        <Text style={styles.infoText}>
+            <Text style={styles.boldText}>Distance: </Text> 
+            <Text style={styles.highlightText}>2 miles</Text>
+        </Text>
+        <Text style={styles.infoText}>
+            <Text style={styles.boldText}>Duration: </Text> 
+            <Text style={styles.highlightText}>25 mins</Text>
+        </Text>
+        <Text style={styles.infoText}>
+            <Text style={styles.boldText}>Calories Burned: </Text> 
+            <Text style={styles.highlightText}>300 kcal</Text>
+        </Text>
         </View>
 
         {/* Pie Chart */}
@@ -78,80 +217,61 @@ const RunsVisualization = () => {
           />
         </View>
       </View>
+      <View style={styles.dotsContainer}>
+            {chartsData.map((_, index) => (
+            <View
+                key={index}
+                style={[
+                styles.dot,
+                activeIndex === index && styles.activeDot,
+                ]}
+            />
+            ))}
+        </View>
 
-      {/* Heart Rate Chart */}
-      <View style={styles.chartBox}>
-        <VictoryChart theme={VictoryTheme.material} width={chartWidth} height={chartHeight} domainPadding={20}>
-          <VictoryAxis
-            tickFormat={(t) => new Date(t).toLocaleTimeString()} // Format time on x-axis
-            tickCount={2}
-            style={{
-              axis: { stroke: Colors.colors.text },
-              axisLabel: { fontSize: 12, padding: 30, fill: Colors.colors.text },
-              ticks: { stroke: Colors.colors.text, size: 5 },
-              tickLabels: { fontSize: 10, fill: Colors.colors.text },
-              grid: { stroke: 'none' } // Remove gridlines
-            }}
+      {/* Scrollable container for charts */}
+      <ScrollView
+        horizontal
+        pagingEnabled
+        style={styles.chartContainer}
+        onScroll={(event) => {
+            const contentOffsetX = event.nativeEvent.contentOffset.x;
+            const index = Math.floor(contentOffsetX / chartWidth); // Get the index based on the scroll position
+            setActiveIndex(index);  // Update the active index
+        }}
+        showsHorizontalScrollIndicator={false}
+        >
+        {chartsData.map((item) => (
+            <View style={styles.chartBox} key={item.id}>
+            {item.component}
+            </View>
+        ))}
+       </ScrollView>
+
+      {/* Dots */}
+      <View style={styles.dotsContainer}>
+        {chartsData.map((_, index) => (
+          <View
+            key={index}
+            style={[
+              styles.dot,
+              activeIndex === index && styles.activeDot,
+            ]}
           />
-          <VictoryAxis
-            dependentAxis
-            label="Heart Rate (bpm)"
-            domain={[120, 180]} // Set the y-axis range from 120 to 180
-            tickCount={4}
-            style={{
-              axis: { stroke: Colors.colors.text },
-              axisLabel: { fontSize: 10, padding: 30, fill: Colors.colors.text },
-              ticks: { stroke: Colors.colors.text, size: 5 },
-              tickLabels: { fontSize: 10, fill: Colors.colors.text },
-              grid: { stroke: 'none' } // Remove gridlines
-            }}
-          />
-          <VictoryLine
-            data={fluctuatedHeartRateData}
-            style={{
-              data: { stroke: 'blue' },
-            }}
-          />
-        </VictoryChart>
+        ))}
       </View>
-
-      {/* Pace Over Time Chart */}
-      <View style={styles.chartBox}>
-        <VictoryChart theme={VictoryTheme.material} width={chartWidth} height={chartHeight} domainPadding={20}>
-          <VictoryAxis
-            tickFormat={(t) => new Date(t).toLocaleTimeString()} // Format time on x-axis
-            tickCount={4}
-            style={{
-              axis: { stroke: Colors.colors.text },
-              axisLabel: { fontSize: 12, padding: 10, fill: Colors.colors.text },
-              ticks: { stroke: Colors.colors.text, size: 5 },
-              tickLabels: { fontSize: 10, fill: Colors.colors.text },
-              grid: { stroke: 'none' } // Remove gridlines
-            }}
-          />
-          <VictoryAxis
-            dependentAxis
-            label="Pace (min/km)"
-            tickCount={4}
-            style={{
-              axis: { stroke: Colors.colors.text },
-              axisLabel: { fontSize: 12, padding: 30, fill: Colors.colors.text },
-              ticks: { stroke: Colors.colors.text, size: 5 },
-              tickLabels: { fontSize: 10, fill: Colors.colors.text },
-              grid: { stroke: 'none' } // Remove gridlines
-            }}
-          />
-          <VictoryLine
-            data={fluctuatedPaceData}
-            style={{
-              data: { stroke: 'green' },
-            }}
-          />
-        </VictoryChart>
+      {/* Typewriter Effect */}
+      <View style={styles.chatTextContainer}>
+        <TypeWriter typing={true} style={styles.chatText}>
+          AI: Your latest run has shown some big improvements! It was 2 mins longer than usual, and your mean heart rate is 2 bpm lower.
+        </TypeWriter>
+      </View>
+      <View style={{ width: '100%' }}> 
+        <Text style={styles.bottomtext}>Past Runs</Text>
       </View>
 
       {/* Floating Plus Button */}
-      <TouchableOpacity style={styles.floatingButton} onPress={() => router.push('/workoutsView')}>
+      <TouchableOpacity style={styles.floatingButton}>
         <Ionicons name="add" size={30} color="white" />
       </TouchableOpacity>
     </View>
@@ -162,8 +282,8 @@ const RunsVisualization = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'flex-start',  // Align content to the left horizontally
-    justifyContent: 'flex-start',  // Align content to the top vertically
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
     backgroundColor: Colors.colors.background,
     paddingLeft: 20,
     paddingTop: 20,
@@ -172,67 +292,114 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: Colors.colors.text,
-    marginTop: 40,
-  },
-  textContainer: {
-    flex: 1,  // Allow the text container to take up available space
+    marginTop: 60,
+    marginLeft: 90,
   },
   infoContainer: {
-    marginTop: 30,
+    marginTop: 10,
     marginBottom: 20,
-    flexDirection: 'row',  // Align text and pie chart horizontally
-    alignItems: 'center',  // Vertically center the items
-    justifyContent: 'space-between',  // Ensure space between text and pie chart  // Vertically center the items
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   infoText: {
-    fontSize: 18,
+    fontSize: 14,
+    color: '#000',
+    marginBottom: 5,
+  },
+  boldText: {
     color: Colors.colors.text,
-    marginVertical: 5,
+    fontWeight: 'bold',  // Bold the text behind the colon
+  },
+  highlightText: {
+    backgroundColor: 'lightgreen',  // Highlight the text after the colon
+    fontWeight: 'normal',  // Regular weight for the highlighted text
+  },
+  chatTextContainer: {
+    marginTop: 0,
+    marginBottom: 20,
+  },
+  chatText: {
+    fontSize: 14,
+    backgroundColor: Colors.colors.grey,  // Ensure visibility of text
+    color: 'white',  // Ensure text color is not blending into background
+    marginRight: 18,
+    paddingLeft: 10, // Add padding for better readability
+    paddingRight: 10,
+    paddingTop: 0,
+    paddingBottom: 5,
+  },
+  bottomtext: {
+    backgroundColor: Colors.colors.grey,
+    color: 'white',
+    fontSize: 18,
+    marginTop: 60,
+    marginBottom: 100,
   },
   chartBox: {
-    backgroundColor: Colors.colors.grey, // Lighter background for chart box
-    borderRadius: 10,  // Rounded corners
-    paddingRight: 1,  // Some padding around the chart
-    marginBottom: 20,  // Space between charts
-    shadowColor: '#000',  // Shadow effect for depth
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,  // Shadow for Android
-  },
-  floatingButton: {
-    position: 'absolute', // Make the button float
-    bottom: 30, // Distance from the bottom of the screen
-    right: 30, // Distance from the right of the screen
-    backgroundColor: Colors.colors.primary,
-    width: 60,
-    height: 60,
-    borderRadius: 30, // Make the button circular
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: Colors.colors.grey,
+    borderRadius: 10,
+    paddingRight: 0,
+    height: chartHeight,
+    marginBottom: 20,
+    marginLeft: 0,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Shadow for Android
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+  },
+  chartContainer: {
+    width: chartWidth,
+    height: chartHeight + 60,
+    marginBottom: 10,
   },
   pieChartContainer: {
     backgroundColor: Colors.colors.grey,
     borderRadius: 10,
-    padding: 10,
-    width: 120,
-    height: 120,
+    // padding: 20,
+    // paddingRight: 30,
+    marginTop: 30,
+    marginLeft: 45,
+    width: 130,
+    height: 130,
+    justifyContent: 'center',  // Center the pie chart inside the container
+    alignItems: 'center', 
+  },
+  dotsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    position: 'absolute',  // Use absolute positioning to place the dots at the bottom
+    bottom: 293,             // Position it at the bottom of the container
+    left: 0,               // Align the dots from the left
+    right: 15,              // Align the dots to the right
+    marginBottom: 0,     // Add a little space between the chart and the dots
+  },
+  dot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    // justifyContent: 'center',
+    backgroundColor: Colors.colors.text,
+    marginHorizontal: 3,
+  },
+  activeDot: {
+    backgroundColor: Colors.colors.primary,
+  },
+  floatingButton: {
+    position: 'absolute',
+    bottom: 30,
+    right: 20,
+    backgroundColor: Colors.colors.primary,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 25,  // Space between the pie chart and text
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
   },
 });
 
 export default RunsVisualization;
-
-

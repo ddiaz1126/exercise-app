@@ -8,6 +8,8 @@ export default {
     primary: "#0a4d4a",
     grey: "#2C2B2C",
     dark: "#1A1A1A",
+    tabActive: '#FFFFFF',
+    tabNotActive: '#A9A9A9',
     background: "#1A1A1A", // Using dark as background
     text: "#FFFFFF", // White text for contrast
     buttonBackground: "#0a4d4a",

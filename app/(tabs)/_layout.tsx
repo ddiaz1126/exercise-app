@@ -10,8 +10,8 @@ const TabsLayout = () => {
         <Tabs
             screenOptions={{ 
                 headerShown: false,
-                tabBarActiveTintColor: Colors.colors.primary, // Use primary color for active tab
-                tabBarInactiveTintColor: Colors.colors.grey,  // Use grey color for inactive tabs
+                tabBarActiveTintColor: Colors.colors.tabActive, // Use primary color for active tab
+                tabBarInactiveTintColor: Colors.colors.tabNotActive,  // Use grey color for inactive tabs
                 tabBarStyle: { backgroundColor: Colors.colors.dark }, // Set tab bar background color
             }}
         >

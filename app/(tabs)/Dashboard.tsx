@@ -3,6 +3,7 @@ import Colors from "@/constants/Colors";
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons'; // Import icons for the plus sign
 import { useRouter } from 'expo-router';
+import TypeWriter from 'react-native-typewriter';
 
 const Dashboard = () => {
   // Get the current month and year
@@ -48,6 +49,12 @@ const Dashboard = () => {
           horizontal
           contentContainerStyle={styles.flatListContainer}
         />
+      </View>
+      {/* Typewriter Effect */}
+      <View style={styles.chatTextContainer}>
+        <TypeWriter typing={true} style={styles.chatText}>
+          AI: Hey there, David. Glad to see you are back, ready for a new workout?
+        </TypeWriter>
       </View>
       <Text style={styles.previousWorkoutsText}>Previous Workouts</Text>
       {/* You can add a list or additional content here for previous workouts */}
@@ -114,6 +121,21 @@ const styles = StyleSheet.create({
   labelText: {
     fontSize: 12, // Font size for day labels
     color: 'Black',
+  },
+  chatTextContainer: {
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  chatText: {
+    fontSize: 14,
+    backgroundColor: Colors.colors.grey,  // Ensure visibility of text
+    color: 'white',  // Ensure text color is not blending into background
+    marginRight: 18,
+    paddingLeft: 10, // Add padding for better readability
+    paddingRight: 10,
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderRadius: 10,
   },
   dateText: {
     fontSize: 26,
