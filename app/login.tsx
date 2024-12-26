@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { validateClient } from '@/utils/database';
+import Colors from '@/constants/Colors';
+import TypeWriter from 'react-native-typewriter';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -25,7 +27,11 @@ const Login = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <View style={styles.chatTextContainer}>
+        <TypeWriter typing={true} style={styles.chatText}>
+          AI: Your latest run has shown some big improvements! It was 2 mins longer than usual, and your mean heart rate is 2 bpm lower.
+        </TypeWriter>
+      </View>
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -49,9 +55,9 @@ const Login = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: Colors.colors.background,
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: '#fff',
   },
   title: {
     fontSize: 24,
@@ -64,6 +70,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 10,
+  },
+  chatTextContainer: {
+    marginTop: 0,
+    marginBottom: 20,
+  },
+  chatText: {
+    fontSize: 14,
+    backgroundColor: Colors.colors.grey,  // Ensure visibility of text
+    color: 'white',  // Ensure text color is not blending into background
+    marginRight: 18,
+    paddingLeft: 10, // Add padding for better readability
+    paddingRight: 10,
+    paddingTop: 0,
+    paddingBottom: 5,
   },
 });
 

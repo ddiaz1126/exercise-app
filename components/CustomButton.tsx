@@ -34,9 +34,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 12,
         minHeight: 62,
-        width: '100%', // Set a fixed width
+        width: '70%', // Set a fixed width
         justifyContent: 'center',
         alignItems: 'center',
+        alignSelf: 'center',
     },
     text: {
         color: '#6200ea', // Primary color

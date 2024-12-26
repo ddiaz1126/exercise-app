@@ -47,12 +47,12 @@ const RunsVisualization = () => {
 
   // Pie chart data (e.g., breakdown of activity types during the run)
   const pieData = [
-    { x: 'Walking', y: 20 },
+    { x: 'Very Light', y: 20 },
     { x: 'Light', y: 20 },
-    { x: 'Medium', y: 30 },
-    { x: 'High', y: 30 },
+    { x: 'Moderate', y: 30 },
+    { x: 'High', y: 20 },
+    { x: 'Maximum', y: 10 },
   ];
-
   const chartsData = [
     {
       id: 1,
@@ -204,18 +204,34 @@ const RunsVisualization = () => {
 
         {/* Pie Chart */}
         <View style={styles.pieChartContainer}>
-          <VictoryPie
-            data={pieData}
-            colorScale={['#6D6DFF', '#FFB84D', '#4CAF50', '#F44336']}  // Different colors for each section
-            style={{
-              labels: { fontSize: 10, fill: Colors.colors.text },
-            }}
-            innerRadius={30}  // Donut style
-            labelRadius={20}  // Adjust label positioning
-            width={200}  // Pie chart size
-            height={200}
-          />
+          <View style={styles.pieChartTitleContainer}>
+            <Text style={styles.pieChartTitle}> Heart Rate Zones</Text>
+          </View>
+          <View style={styles.pieBox}>
+            {/* Legend */}
+            <View style={styles.legendContainer}>
+              {pieData.map((entry, index) => (
+                <View style={styles.legendItem} key={index}>
+                  <View style={[styles.legendColor, { backgroundColor: ['#FFFFFF', '#6D6DFF', '#FFB84D', '#4CAF50', '#F44336'][index] }]} />
+                  <Text style={styles.legendLabel}>{entry.x}</Text>
+                </View>
+              ))}
+            </View>
+            <VictoryPie
+              data={pieData}
+              colorScale={['#FFFFFF', '#6D6DFF', '#FFB84D', '#4CAF50', '#F44336']}  // Different colors for each section
+              style={{
+                labels: { fontSize: 6, fill: 'black', fontWeight: 'bold'},
+              }}
+              innerRadius={40}  // Donut style
+              labelRadius={27}  // Adjust label positioning
+              width={150}  // Pie chart size
+              height={150}
+              labels={({ datum }) => `${datum.y}%`} 
+            />
+          </View>
         </View>
+        
       </View>
       <View style={styles.dotsContainer}>
             {chartsData.map((_, index) => (
@@ -272,7 +288,7 @@ const RunsVisualization = () => {
 
       {/* Floating Plus Button */}
       <TouchableOpacity style={styles.floatingButton}>
-        <Ionicons name="add" size={30} color="white" />
+        <Ionicons name="rocket" size={30} color="white" />
       </TouchableOpacity>
     </View>
   );
@@ -357,14 +373,58 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.colors.grey,
     borderRadius: 10,
     // padding: 20,
-    // paddingRight: 30,
+    paddingRight: 10,
+    paddingLeft: 40,
     marginTop: 30,
-    marginLeft: 45,
-    width: 130,
+    marginLeft: 15,
+    width: 160,
     height: 130,
     justifyContent: 'center',  // Center the pie chart inside the container
     alignItems: 'center', 
+    // flexDirection: 'row',
   },
+  pieChartTitleContainer: {
+    marginBottom: -30,
+    marginRight: -30,
+  },
+  pieChartTitle: {
+    color: 'white',
+    marginBottom: 10,
+    marginLeft: -70,
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  pieBox: {
+    marginTop: 0,
+    flexDirection: 'row',
+    marginBottom: -30,
+  },
+  legendContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap', // Allows the items to wrap to the next line if needed
+    marginTop: 30, // Adjust spacing as needed
+    justifyContent: 'flex-start', // Align items to the left
+    width: '30%', // Ensure it takes full width
+    paddingHorizontal: 0, // Add padding for spacing
+    marginRight: 0,
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 0, // Space between each legend item
+    marginBottom: 5, // Space between rows
+  },
+  
+  legendColor: {
+    width: 10, // Adjust the size of the color box
+    height: 10, // Adjust the size of the color box
+    marginRight: 5, // Space between the color box and label
+  },
+  
+  legendLabel: {
+    fontSize: 8, // Adjust font size
+    color: Colors.colors.text, // Ensure text color is visible
+  },  
   dotsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',

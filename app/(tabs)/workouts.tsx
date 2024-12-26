@@ -345,7 +345,7 @@ const Workouts = () => {
         ))}
       </ScrollView>
       <View style={styles.chatTextContainer}>
-        <TypeWriter typing={true} style={styles.chatText}>
+        <TypeWriter typing={1} style={styles.chatText}>
           AI: Your latest run has shown some big improvements! It was 2 mins longer than usual, and your mean heart rate is 2 bpm lower.
         </TypeWriter>
       </View>
@@ -369,7 +369,7 @@ const Workouts = () => {
   
       {/* Floating Plus Button */}
       <TouchableOpacity style={styles.floatingButton}>
-        <Ionicons name="add" size={30} color="white" />
+        <Ionicons name="rocket" size={30} color="white" />
       </TouchableOpacity>
     </View>
     
@@ -472,8 +472,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   widgetValueText: {
-    color: Colors.colors.primary,
+    color: 'cyan',
     fontSize: 30,
+    fontWeight: 500,
+    fontFamily: 'Helvetica Neue',
   },
   chartContainer: {
     width: chartWidth,

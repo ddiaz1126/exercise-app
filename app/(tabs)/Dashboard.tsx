@@ -52,8 +52,8 @@ const Dashboard = () => {
       </View>
       {/* Typewriter Effect */}
       <View style={styles.chatTextContainer}>
-        <TypeWriter typing={true} style={styles.chatText}>
-          AI: Hey there, David. Glad to see you are back, ready for a new workout?
+        <TypeWriter typing={1} style={styles.chatText}>
+          AI: Hey there, Misa. Glad to see you are back, ready for a new workout?
         </TypeWriter>
       </View>
       <Text style={styles.previousWorkoutsText}>Previous Workouts</Text>
@@ -61,7 +61,7 @@ const Dashboard = () => {
 
       {/* Floating Plus Button */}
       <TouchableOpacity style={styles.floatingButton} onPress={() => router.push('/workoutsView')}>
-        <Ionicons name="add" size={30} color="white" />
+        <Ionicons name="rocket" size={30} color="white" />
       </TouchableOpacity>
     </View>
   );

@@ -3,6 +3,8 @@ import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } fr
 import Colors from "@/constants/Colors";
 import { useRouter } from 'expo-router';
 import { addClient } from '@/utils/database'; // Ensure this imports the correct addClient function
+import CustomButton from '@/components/CustomButton';
+import TypeWriter from 'react-native-typewriter';
 
 const SignUp = () => {
   const [name, setName] = useState('');
@@ -42,41 +44,53 @@ const SignUp = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
+      <View style={styles.chatTextContainer}>
+              <TypeWriter typing={1} style={styles.chatText}>
+              AI: Ready to join the community? Let’s create your account and get started! 
+              </TypeWriter>
+      </View>
+      <View style={styles.signUpContainer}>
+      <Text style={styles.label}>Name</Text>
       <TextInput
         style={styles.input}
-        placeholder="Name"
-        placeholderTextColor={Colors.colors.grey}
+        placeholder="Enter your Name"
+        placeholderTextColor={'grey'}
         value={name}
         onChangeText={setName}
       />
+      <Text style={styles.label}>Email</Text>
       <TextInput
         style={styles.input}
-        placeholder="Email"
-        placeholderTextColor={Colors.colors.grey}
+        placeholder="Enter your Email"
+        placeholderTextColor={'grey'}
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
       />
+      <Text style={styles.label}>Password</Text>
       <TextInput
         style={styles.input}
-        placeholder="Password"
-        placeholderTextColor={Colors.colors.grey}
+        placeholder="Enter your Password"
+        placeholderTextColor={'grey'}
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
+      <Text style={styles.label}>Confirm Password</Text>
       <TextInput
         style={styles.input}
-        placeholder="Confirm Password"
-        placeholderTextColor={Colors.colors.grey}
+        placeholder="Confirm your Password"
+        placeholderTextColor={'grey'}
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         secureTextEntry
       />
-      <Button title="Sign Up" onPress={handleSignUp} color={Colors.colors.buttonBackground} />
-      <View style={styles.loginContainer}>
+      <CustomButton
+            onPress={handleSignUp} // Update to call handleLogin
+            title="Sign Up"
+          />
+          <View style={styles.loginContainer}>
             <Text style={styles.loginText}>
               Have an account already?{' '}
             </Text>
@@ -84,6 +98,7 @@ const SignUp = () => {
               <Text style={styles.loginLink}>Log In</Text>
             </TouchableOpacity>
           </View>
+      </View>
     </View>
     
   );
@@ -92,30 +107,35 @@ const SignUp = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     padding: 20,
     backgroundColor: Colors.colors.background,
   },
-  title: {
-    fontSize: Colors.fonts.size.large,
-    marginBottom: 20,
-    textAlign: 'center',
-    color: Colors.colors.text,
-    fontFamily: Colors.fonts.bold,
-  },
+  // title: {
+  //   fontSize: Colors.fonts.size.large,
+  //   marginBottom: 20,
+  //   textAlign: 'center',
+  //   color: Colors.colors.text,
+  //   fontFamily: Colors.fonts.bold,
+  // },
   input: {
     height: 40,
-    borderColor: Colors.colors.grey,
+    borderColor: 'white',
+    borderRadius: 5,
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 10,
     color: Colors.colors.text,
     backgroundColor: Colors.colors.dark,
   },
+  label: {
+    color: 'white',
+    marginBottom: 5,
+  },
   loginContainer: {
     flexDirection: 'row', // Aligns text and link in a row
     justifyContent: 'center',
-    marginTop: 40, // Adjust this value as needed
+    marginTop: 20, // Adjust this value as needed
   },
   loginText: {
     color: 'white',
@@ -123,6 +143,31 @@ const styles = StyleSheet.create({
   loginLink: {
     color: 'lightblue',
     fontWeight: 'bold',
+  },
+  signUpContainer: {
+    marginTop: 180,
+  },
+  chatTextContainer: {
+    marginBottom: 0,
+    marginLeft: 20,
+    marginTop: 80,
+    width: '100%',
+    position: 'absolute',  // Optional: Space between the container and top elements
+  }, 
+  chatText: {
+    fontSize: 18,
+    backgroundColor: Colors.colors.grey, // Ensure visibility of text
+    borderRadius: 10,
+    color: 'white', // Ensure text color is not blending into background
+    marginRight: 0,
+    paddingLeft: 10, // Add padding for better readability
+    paddingRight: 10,
+    paddingTop: 0,
+    paddingBottom: 5,
+    fontFamily: 'Roboto Mono',  // Monospace font for a "robotic" feel
+    letterSpacing: 1.5, // Increase space between characters
+    lineHeight: 30,  // Increase space between lines to make text easier to read
+    fontWeight: 'bold', // Make it bold for a stronger "robotic" appearance
   },
 });
 
