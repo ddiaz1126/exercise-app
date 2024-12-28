@@ -278,8 +278,8 @@ const RunsVisualization = () => {
       </View>
       {/* Typewriter Effect */}
       <View style={styles.chatTextContainer}>
-        <TypeWriter typing={true} style={styles.chatText}>
-          AI: Your latest run has shown some big improvements! It was 2 mins longer than usual, and your mean heart rate is 2 bpm lower.
+        <TypeWriter typing={1} style={styles.chatText}>
+          AI: 
         </TypeWriter>
       </View>
       <View style={{ width: '100%' }}> 

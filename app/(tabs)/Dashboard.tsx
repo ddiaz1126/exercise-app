@@ -1,31 +1,33 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
 import Colors from "@/constants/Colors";
-import React from 'react';
-import { Ionicons } from '@expo/vector-icons'; // Import icons for the plus sign
+import React, { useState } from 'react';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import TypeWriter from 'react-native-typewriter';
+import ChatButton from '../../components/ChatButton'; 
 
 const Dashboard = () => {
-  // Get the current month and year
   const currentDate = new Date();
   const monthYear = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
-  const router = useRouter(); // Initialize the router
+  const router = useRouter();
 
-  // Calculate the start of the week (Sunday)
   const startOfWeek = new Date(currentDate);
   startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
 
-  // Create an array of dates for the week (Sunday to Saturday)
   const weekDates = Array.from({ length: 7 }, (_, index) => {
     const date = new Date(startOfWeek);
     date.setDate(startOfWeek.getDate() + index);
     return date;
   });
+  
+  const [chatbotResponse, setChatbotResponse] = useState(null);
 
-  // Days of the week
+  const handleChatResponse = (response) => {
+    setChatbotResponse(response); // Update chatbot response
+  };
+
   const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-  // Render each date with its label
   const renderItem = ({ item, index }) => {
     const isToday = item.toDateString() === currentDate.toDateString();
     return (
@@ -39,7 +41,10 @@ const Dashboard = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+    >
       <Text style={styles.dateText}>{monthYear}</Text>
       <View style={styles.weekContainer}>
         <FlatList
@@ -50,20 +55,18 @@ const Dashboard = () => {
           contentContainerStyle={styles.flatListContainer}
         />
       </View>
-      {/* Typewriter Effect */}
+
       <View style={styles.chatTextContainer}>
         <TypeWriter typing={1} style={styles.chatText}>
-          AI: Hey there, Misa. Glad to see you are back, ready for a new workout?
+          {chatbotResponse}
         </TypeWriter>
       </View>
-      <Text style={styles.previousWorkoutsText}>Previous Workouts</Text>
-      {/* You can add a list or additional content here for previous workouts */}
 
-      {/* Floating Plus Button */}
-      <TouchableOpacity style={styles.floatingButton} onPress={() => router.push('/workoutsView')}>
-        <Ionicons name="rocket" size={30} color="white" />
-      </TouchableOpacity>
-    </View>
+      <Text style={styles.previousWorkoutsText}>Previous Workouts</Text>
+
+      {/* Floating Button */}
+      <ChatButton onResponse={handleChatResponse} /> {/* Pass handleChatResponse to ChatButton */}
+    </KeyboardAvoidingView>
   );
 };
 
@@ -76,11 +79,6 @@ const styles = StyleSheet.create({
     paddingLeft: 20, 
     backgroundColor: Colors.colors.background,
   },
-  dateText: {
-    fontSize: 40, // Increased font size for month and year
-    color: Colors.colors.text,
-    marginBottom: 20, // Increased space below the date
-  },
   weekContainer: {
     backgroundColor: 'white',
     marginTop: 30,
@@ -88,23 +86,15 @@ const styles = StyleSheet.create({
     borderWidth: 8,
     borderColor: 'white',
     borderRadius: 10,
-    height: 65, // Adjusted height to fit labels and dates
+    height: 65,
     justifyContent: 'center',
     paddingHorizontal: 5,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
   },
   flatListContainer: {
     alignItems: 'center',
   },
   dateContainer: {
-    alignItems: 'center', // Center items horizontally
+    alignItems: 'center',
     marginHorizontal: 5,
   },
   dateCircle: {
@@ -119,7 +109,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.colors.primary,
   },
   labelText: {
-    fontSize: 12, // Font size for day labels
+    fontSize: 12,
     color: 'Black',
   },
   chatTextContainer: {
@@ -128,10 +118,10 @@ const styles = StyleSheet.create({
   },
   chatText: {
     fontSize: 14,
-    backgroundColor: Colors.colors.grey,  // Ensure visibility of text
-    color: 'white',  // Ensure text color is not blending into background
+    backgroundColor: Colors.colors.grey,
+    color: 'white',
     marginRight: 18,
-    paddingLeft: 10, // Add padding for better readability
+    paddingLeft: 10,
     paddingRight: 10,
     paddingTop: 5,
     paddingBottom: 5,
@@ -146,30 +136,10 @@ const styles = StyleSheet.create({
     color: 'Black',
   },
   previousWorkoutsText: {
-    fontSize: 20, // Adjust font size for the "Previous Workouts" label
+    fontSize: 20,
     color: Colors.colors.text,
-    marginTop: 20, // Space above the label
-    marginLeft: 0, // Align with other text
-  },
-  // Floating Button Styles
-  floatingButton: {
-    position: 'absolute', // Make the button float
-    bottom: 30, // Distance from the bottom of the screen
-    right: 30, // Distance from the right of the screen
-    backgroundColor: Colors.colors.primary,
-    width: 60,
-    height: 60,
-    borderRadius: 30, // Make the button circular
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Shadow for Android
+    marginTop: 20,
   },
 });
 
 export default Dashboard;
-
-
