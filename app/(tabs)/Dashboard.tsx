@@ -58,7 +58,7 @@ const Dashboard = () => {
 
       <View style={styles.chatTextContainer}>
         <TypeWriter typing={1} style={styles.chatText}>
-          {chatbotResponse}
+          {chatbotResponse || "Hello there! How can I assist you today?"}
         </TypeWriter>
       </View>
 
@@ -81,21 +81,24 @@ const styles = StyleSheet.create({
   },
   weekContainer: {
     backgroundColor: 'white',
+    width: 360,
     marginTop: 30,
-    marginLeft: 20,
+    marginLeft: 0,
     borderWidth: 8,
     borderColor: 'white',
     borderRadius: 10,
-    height: 65,
+    height: 70,
     justifyContent: 'center',
-    paddingHorizontal: 5,
+    paddingHorizontal: 0,
   },
   flatListContainer: {
     alignItems: 'center',
+    justifyContent: 'flex-end',
   },
   dateContainer: {
     alignItems: 'center',
-    marginHorizontal: 5,
+    justifyContent: 'flex-end',
+    marginHorizontal: 10,
   },
   dateCircle: {
     width: 30,
@@ -106,7 +109,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   today: {
-    backgroundColor: Colors.colors.primary,
+    backgroundColor: 'lightgrey',
   },
   labelText: {
     fontSize: 12,

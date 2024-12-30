@@ -32,7 +32,7 @@ const ChatButton = ({ onResponse }) => {
   // Interpolating animation value to set width
   const containerWidth = animationValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [80, 350], // Change width from default size to expanded size
+    outputRange: [90, 370], // Change width from default size to expanded size
   });
 
   // Handle keyboard visibility
@@ -64,15 +64,23 @@ const ChatButton = ({ onResponse }) => {
         styles.container,
         { 
           width: containerWidth, 
-          bottom: expanded ? 260 : 30 + keyboardHeight, // Adjust position based on keyboard visibility and expansion state
+          bottom: expanded ? 230 : 30 + keyboardHeight, // Adjust position based on keyboard visibility and expansion state
         },
       ]}
     >
       {expanded && (
         <ChatComponent onResponse={onResponse} /> // Only show the ChatComponent when expanded
       )}
-      <TouchableOpacity style={styles.floatingButton} onPress={toggleExpand}>
-        <Ionicons name={expanded ? 'close' : 'rocket'} size={30} color="white" />
+      <TouchableOpacity
+        style={[
+          styles.floatingButton,
+          {
+            backgroundColor: expanded ? Colors.colors.grey : Colors.colors.primary,
+          },
+        ]}
+        onPress={toggleExpand}
+      >
+        <Ionicons name={expanded ? 'close' : 'rocket'} size={30} color="white"  />
       </TouchableOpacity>
     </Animated.View>
   );
@@ -81,23 +89,24 @@ const ChatButton = ({ onResponse }) => {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    right: 30,
+    right: 10,
     flexDirection: 'row', // Ensure the button and the ChatComponent are in a row
     alignItems: 'center',
-    backgroundColor: Colors.colors.primary,
-    borderRadius: 30,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
+    backgroundColor: Colors.colors.grey,
+    borderRadius: 12,
+    paddingVertical: 0,
+    paddingHorizontal: 0,
     elevation: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
+    marginBottom: 20,
   },
   floatingButton: {
     width: 60,
     height: 60,
-    borderRadius: 30,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Colors.colors.primary,

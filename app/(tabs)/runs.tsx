@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { VictoryChart, VictoryLine, VictoryTheme, VictoryAxis, VictoryScatter, VictoryArea, VictoryLabel } from 'victory-native';
 import { VictoryPie } from 'victory-native';
 import TypeWriter from 'react-native-typewriter';
+import ChatButton from '../../components/ChatButton'; 
 
 const { width } = Dimensions.get('window');
 
@@ -40,6 +41,11 @@ const RunsVisualization = () => {
     { x: new Date(2024, 0, 1, 12, 3, 0), y: 4.3 },
     { x: new Date(2024, 0, 1, 12, 4, 0), y: 4.0 },
   ];
+  const [chatbotResponse, setChatbotResponse] = useState(null);
+
+  const handleChatResponse = (response) => {
+    setChatbotResponse(response); // Update chatbot response
+  };
 
   // Add fluctuations to data
   const fluctuatedHeartRateData = addFluctuations(heartRateData, 5); // Fluctuation range for heart rate
@@ -231,7 +237,14 @@ const RunsVisualization = () => {
             />
           </View>
         </View>
-        
+      </View>
+      {/* Typewriter Effect */}
+      <View style={styles.chatTextContainer}>
+        <Text>
+          <TypeWriter typing={1} style={styles.chatText}>
+            {chatbotResponse || "Hello there! How can I assist you today?"}
+          </TypeWriter>
+        </Text>
       </View>
       <View style={styles.dotsContainer}>
             {chartsData.map((_, index) => (
@@ -276,20 +289,12 @@ const RunsVisualization = () => {
           />
         ))}
       </View>
-      {/* Typewriter Effect */}
-      <View style={styles.chatTextContainer}>
-        <TypeWriter typing={1} style={styles.chatText}>
-          AI: 
-        </TypeWriter>
-      </View>
       <View style={{ width: '100%' }}> 
         <Text style={styles.bottomtext}>Past Runs</Text>
       </View>
 
-      {/* Floating Plus Button */}
-      <TouchableOpacity style={styles.floatingButton}>
-        <Ionicons name="rocket" size={30} color="white" />
-      </TouchableOpacity>
+      {/* Floating Button */}
+      <ChatButton onResponse={handleChatResponse} /> {/* Pass handleChatResponse to ChatButton */}
     </View>
   );
 };
@@ -333,7 +338,7 @@ const styles = StyleSheet.create({
   },
   chatTextContainer: {
     marginTop: 0,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   chatText: {
     fontSize: 14,
@@ -429,7 +434,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     position: 'absolute',  // Use absolute positioning to place the dots at the bottom
-    bottom: 293,             // Position it at the bottom of the container
+    bottom: 243,             // Position it at the bottom of the container
     left: 0,               // Align the dots from the left
     right: 15,              // Align the dots to the right
     marginBottom: 0,     // Add a little space between the chart and the dots

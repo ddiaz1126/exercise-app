@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { VictoryChart, VictoryBar, VictoryLine, VictoryTheme, VictoryAxis, VictoryScatter, VictoryArea, VictoryLabel } from 'victory-native';
 import { VictoryPie } from 'victory-native';
 import TypeWriter from 'react-native-typewriter';
+import ChatButton from '../../components/ChatButton'; 
 
 const { width } = Dimensions.get('window');
 
@@ -64,6 +65,12 @@ const Workouts = () => {
     { x: new Date(2024, 9, 19), y: 325 }, 
     { x: new Date(2024, 11, 21), y: 330 }, 
   ];
+
+  const [chatbotResponse, setChatbotResponse] = useState(null);
+
+  const handleChatResponse = (response) => {
+    setChatbotResponse(response); // Update chatbot response
+  };
 
 
   const chartsData = [
@@ -324,6 +331,14 @@ const Workouts = () => {
             <Text style={styles.widgetValueText}>50k lbs</Text>
           </View>
         </View>
+        
+      </View>
+      <View style={styles.chatTextContainer}>
+        <Text>
+          <TypeWriter typing={1} style={styles.chatText}>
+            {chatbotResponse || "Hello there! How can I assist you today?"}
+          </TypeWriter>
+        </Text>
       </View>
   
       {/* Scrollable Charts */}
@@ -344,11 +359,6 @@ const Workouts = () => {
           </View>
         ))}
       </ScrollView>
-      <View style={styles.chatTextContainer}>
-        <TypeWriter typing={1} style={styles.chatText}>
-          AI: Your latest run has shown some big improvements! It was 2 mins longer than usual, and your mean heart rate is 2 bpm lower.
-        </TypeWriter>
-      </View>
   
       {/* Dots */}
       <View style={styles.dotsContainer}>
@@ -367,10 +377,8 @@ const Workouts = () => {
         <Text style={styles.bottomtext}>Individual Workouts</Text>
       </View>
   
-      {/* Floating Plus Button */}
-      <TouchableOpacity style={styles.floatingButton}>
-        <Ionicons name="rocket" size={30} color="white" />
-      </TouchableOpacity>
+      {/* Floating Button */}
+      <ChatButton onResponse={handleChatResponse} /> {/* Pass handleChatResponse to ChatButton */}
     </View>
     
   );  
@@ -420,8 +428,8 @@ const styles = StyleSheet.create({
   },
   chatTextContainer: {
     height: 60,
-    marginTop: -110,
-    marginBottom: 90,
+    marginTop: 0,
+    marginBottom: 10,
   },
   chatText: {
     fontSize: 14,
@@ -486,7 +494,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     position: 'absolute',  // Use absolute positioning to place the dots at the bottom
-    bottom: 280,             // Position it at the bottom of the container
+    bottom: 230,             // Position it at the bottom of the container
     left: 0,               // Align the dots from the left
     right: 15,              // Align the dots to the right
     marginBottom: 0,     // Add a little space between the chart and the dots

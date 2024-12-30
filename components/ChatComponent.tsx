@@ -34,7 +34,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ onResponse }) => {
     <View style={styles.container}>
       <View style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { color: query.length > 20 ? 'red' : 'white' }]}
           placeholder="Ask me something"
           value={query}
           onChangeText={setQuery}
@@ -44,7 +44,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ onResponse }) => {
           onPress={handleChatSubmit} 
           disabled={loading}
         >
-          <Text style={styles.askButtonText}>{loading ? 'Processing...' : 'Ask'}</Text>
+          <Text style={styles.askButtonText}>{loading ? '.....' : 'Ask'}</Text>
         </TouchableOpacity>
       </View>
       {/* <Text style={styles.response}>
@@ -62,35 +62,31 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row', // Align input and button horizontally
     alignItems: 'center', // Vertically center the input and button
+    marginLeft: 0
   },
   input: {
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    marginRight: 10, // Space between the input and the button
+    marginRight: 0, // Space between the input and the button
     paddingLeft: 8,
     flex: 1, // Make the input take up remaining space
-    minWidth: 200, 
+    minWidth: 240, 
   },
   askButton: {
     paddingVertical: 10,
-    paddingHorizontal: 15,
-    backgroundColor: Colors.colors.primary,
+    paddingHorizontal: 20,
+    backgroundColor: Colors.colors.grey,
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },
   loadingButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    backgroundColor: Colors.colors.primary,
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center', // Disable color when loading
+    backgroundColor: Colors.colors.grey, // Disable color when loading
   },
   askButtonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 18,
   },
   response: {
     marginTop: 20,
