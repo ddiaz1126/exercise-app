@@ -12,7 +12,8 @@ const TabsLayout = () => {
                 headerShown: false,
                 tabBarActiveTintColor: Colors.colors.tabActive, // Use primary color for active tab
                 tabBarInactiveTintColor: Colors.colors.tabNotActive,  // Use grey color for inactive tabs
-                tabBarStyle: { backgroundColor: Colors.colors.dark }, // Set tab bar background color
+                tabBarStyle: { backgroundColor: Colors.colors.dark, // Set tab bar background color
+                                height: 85 }, 
             }}
         >
             <Tabs.Screen
@@ -22,7 +23,7 @@ const TabsLayout = () => {
                     tabBarIcon: ({ color }) => (
                         <Entypo
                             name="man"
-                            size={24}
+                            size={26}
                             color={color}
                         />
                     ),
@@ -35,7 +36,7 @@ const TabsLayout = () => {
                     tabBarIcon: ({ color }) => (
                         <Entypo
                             name="menu"
-                            size={24}
+                            size={26}
                             color={color}
                         />
                     ),
@@ -48,7 +49,7 @@ const TabsLayout = () => {
                     tabBarIcon: ({ color }) => (
                         <Entypo
                             name="calendar"
-                            size={24}
+                            size={26}
                             color={color}
                         />
                     ),
@@ -61,7 +62,7 @@ const TabsLayout = () => {
                     tabBarIcon: ({ color }) => (
                         <Entypo
                             name="home"
-                            size={24}
+                            size={26}
                             color={color}
                         />
                     ),
@@ -74,7 +75,7 @@ const TabsLayout = () => {
                     tabBarIcon: ({ color }) => (
                         <Entypo
                             name="user"
-                            size={24}
+                            size={26}
                             color={color}
                         />
                     ),

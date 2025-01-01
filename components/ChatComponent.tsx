@@ -34,7 +34,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ onResponse }) => {
     <View style={styles.container}>
       <View style={styles.inputContainer}>
         <TextInput
-          style={[styles.input, { color: query.length > 20 ? 'red' : 'white' }]}
+          style={[styles.input, { color: query.length > 60 ? 'red' : 'white' }]}
           placeholder="Ask me something"
           value={query}
           onChangeText={setQuery}

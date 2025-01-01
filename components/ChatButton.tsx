@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, Animated, Easing, Keyboard, Platform, StyleSheet } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, TouchableOpacity, Animated, Easing, Keyboard, Platform, StyleSheet, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
 import ChatComponent from './ChatComponent';  // Import ChatComponent
@@ -8,16 +8,23 @@ const ChatButton = ({ onResponse }) => {
   const [expanded, setExpanded] = useState(false); // Toggle for expansion
   const [animationValue] = useState(new Animated.Value(0)); // Animation for expansion
   const [keyboardHeight, setKeyboardHeight] = useState(0); // Track keyboard height
+  const [iconState, setIconState] = useState('rocket'); // State for icon (either 'rocket' or 'close')
+  const inputRef = useRef(null); // Ref for the invisible TextInput
 
   // Handles expanding and collapsing animation
   const toggleExpand = () => {
     if (expanded) {
+      // When collapsing, dismiss the keyboard
+      Keyboard.dismiss(); // Dismiss the keyboard
       Animated.timing(animationValue, {
         toValue: 0,
         duration: 300,
         easing: Easing.out(Easing.ease),
         useNativeDriver: false,
       }).start(() => setExpanded(false));
+
+      // Switch the icon to 'rocket' smoothly
+      setIconState('rocket');
     } else {
       setExpanded(true);
       Animated.timing(animationValue, {
@@ -26,13 +33,26 @@ const ChatButton = ({ onResponse }) => {
         easing: Easing.out(Easing.ease),
         useNativeDriver: false,
       }).start();
+      
+      // Show keyboard by focusing on an invisible TextInput
+      if (inputRef.current) {
+        inputRef.current.focus();  // Focus on the invisible TextInput
+      }
+
+      // Switch the icon to 'close' smoothly
+      setIconState('close');
     }
   };
 
-  // Interpolating animation value to set width
+  // Interpolating animation value to set width and position of the container
   const containerWidth = animationValue.interpolate({
     inputRange: [0, 1],
     outputRange: [90, 370], // Change width from default size to expanded size
+  });
+
+  const containerBottom = animationValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [30 + keyboardHeight, 230], // Adjust position based on keyboard visibility and expansion state
   });
 
   // Handle keyboard visibility
@@ -64,24 +84,48 @@ const ChatButton = ({ onResponse }) => {
         styles.container,
         { 
           width: containerWidth, 
-          bottom: expanded ? 230 : 30 + keyboardHeight, // Adjust position based on keyboard visibility and expansion state
+          bottom: containerBottom, // Smooth bottom transition
         },
       ]}
     >
       {expanded && (
         <ChatComponent onResponse={onResponse} /> // Only show the ChatComponent when expanded
       )}
-      <TouchableOpacity
+      
+      {/* Invisible TextInput to trigger keyboard visibility */}
+      <TextInput
+        ref={inputRef}
+        style={styles.invisibleInput}
+        keyboardType="default"
+        autoFocus={false} // Do not automatically focus on load
+      />
+
+      <Animated.View
         style={[
           styles.floatingButton,
           {
             backgroundColor: expanded ? Colors.colors.grey : Colors.colors.primary,
           },
         ]}
-        onPress={toggleExpand}
       >
-        <Ionicons name={expanded ? 'close' : 'rocket'} size={30} color="white"  />
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonTouchable}
+          onPress={toggleExpand}
+        >
+          <Ionicons 
+            name={iconState} 
+            size={30} 
+            color="white" 
+            style={{
+              transform: [
+                {
+                  rotate: iconState === 'close' ? '0deg' : '0deg', // Optional: Add rotation for the icon
+                },
+              ],
+            }} 
+          />
+        </TouchableOpacity>
+      </Animated.View>
     </Animated.View>
   );
 };
@@ -112,6 +156,19 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.colors.primary,
     position: 'absolute',  // Make sure it stays in place when expanded
     right: 0, // Align the button to the far right of the container
+  },
+  buttonTouchable: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+  },
+  invisibleInput: {
+    height: 0,
+    width: 0,
+    position: 'absolute',
+    top: 0,
+    left: 0,
   },
 });
 

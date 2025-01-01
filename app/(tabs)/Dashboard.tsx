@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   },
   chatTextContainer: {
     marginTop: 20,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   chatText: {
     fontSize: 14,

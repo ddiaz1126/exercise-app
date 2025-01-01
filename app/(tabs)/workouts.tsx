@@ -6,6 +6,8 @@ import { VictoryChart, VictoryBar, VictoryLine, VictoryTheme, VictoryAxis, Victo
 import { VictoryPie } from 'victory-native';
 import TypeWriter from 'react-native-typewriter';
 import ChatButton from '../../components/ChatButton'; 
+import AddWorkoutButton from '../../components/addWorkoutButton';
+import { useRouter } from 'expo-router';
 
 const { width } = Dimensions.get('window');
 
@@ -15,6 +17,8 @@ const chartHeight = chartWidth * 0.5;  // 50% of chart width
 
 const Workouts = () => {
   const [activeIndex, setActiveIndex] = useState(0);  // Active index for the slide
+
+  const router = useRouter();
 
   const WorkoutCountData = [
     { x: new Date(2024, 0, 3), y: 7 }, 
@@ -71,7 +75,10 @@ const Workouts = () => {
   const handleChatResponse = (response) => {
     setChatbotResponse(response); // Update chatbot response
   };
-
+  const handleAddWorkout = () => {
+    console.log('Add workout button pressed!');
+    // Add your logic here (e.g., navigate to a new screen or open a modal)
+  };
 
   const chartsData = [
     {
@@ -379,6 +386,9 @@ const Workouts = () => {
   
       {/* Floating Button */}
       <ChatButton onResponse={handleChatResponse} /> {/* Pass handleChatResponse to ChatButton */}
+      {/* AddWorkoutButton */}
+      <AddWorkoutButton onPress={() => router.push('/addWorkout')} />
+
     </View>
     
   );  

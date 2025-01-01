@@ -6,8 +6,12 @@ import { VictoryChart, VictoryLine, VictoryTheme, VictoryAxis, VictoryScatter, V
 import { VictoryPie } from 'victory-native';
 import TypeWriter from 'react-native-typewriter';
 import ChatButton from '../../components/ChatButton'; 
+import AddRunButton from '../../components/addRunButton';
+import { useRouter } from 'expo-router';
 
 const { width } = Dimensions.get('window');
+
+// const router = useRouter();
 
 // Responsive chart width and height
 const chartWidth = width * 0.9;  // 90% of screen width, not full screen width
@@ -23,6 +27,8 @@ const addFluctuations = (data, fluctuationRange = 5) => {
 
 const RunsVisualization = () => {
   const [activeIndex, setActiveIndex] = useState(0);  // Active index for the slide
+
+  const router = useRouter();
 
   // Base data: Time (in seconds or Unix timestamps) and heart rate values (120-180)
   const heartRateData = [
@@ -45,6 +51,9 @@ const RunsVisualization = () => {
 
   const handleChatResponse = (response) => {
     setChatbotResponse(response); // Update chatbot response
+  };
+  const handleAddRun = () => {
+    console.log('Add run button pressed!');
   };
 
   // Add fluctuations to data
@@ -289,12 +298,13 @@ const RunsVisualization = () => {
           />
         ))}
       </View>
-      <View style={{ width: '100%' }}> 
+      <View style={{ width: '100%' }}>
         <Text style={styles.bottomtext}>Past Runs</Text>
       </View>
-
       {/* Floating Button */}
       <ChatButton onResponse={handleChatResponse} /> {/* Pass handleChatResponse to ChatButton */}
+      {/* AddWorkoutButton */}
+      <AddRunButton onPress={() => router.push('/addRun')} />
     </View>
   );
 };
