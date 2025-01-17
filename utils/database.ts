@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const addClient = async (name: string, username: string, email: string, password: string) => {
   try {
-    const response = await axios.post('http://10.0.0.173:8000/api/register/', {
+    const response = await axios.post('http://10.0.0.147:8000/api/register/', {
       name,
       username,
       email,
@@ -32,7 +32,7 @@ const addClient = async (name: string, username: string, email: string, password
 // 'http://10.0.0.103:8000/api/login/'
 // Function to validate user login
 const validateClient = async (email: string, password: string) => {
-  const url = 'http://10.0.0.173:8000/api/login/';
+  const url = 'http://10.0.0.147:8000/api/login/';
   const requestData = { email, password };
 
   console.log('Sending login request to:', url);

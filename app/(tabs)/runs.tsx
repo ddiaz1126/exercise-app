@@ -2,252 +2,111 @@ import React, { useState } from 'react';
 import { View, Text, Dimensions, StyleSheet, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import Colors from "@/constants/Colors";
 import { Ionicons } from '@expo/vector-icons';
-import { VictoryChart, VictoryLine, VictoryTheme, VictoryAxis, VictoryScatter, VictoryArea, VictoryLabel } from 'victory-native';
+import { VictoryChart, VictoryBar, VictoryLine, VictoryTheme, VictoryAxis, VictoryScatter, VictoryArea, VictoryLabel } from 'victory-native';
 import { VictoryPie } from 'victory-native';
 import TypeWriter from 'react-native-typewriter';
 import ChatButton from '../../components/ChatButton'; 
-import AddRunButton from '../../components/addRunButton';
+import AddWorkoutButton from '../../components/addWorkoutButton';
+import StatsContainers from '../../components/statsContainers';
+import BarChart from '../../components/barGraph';
+import LineChart from '../../components/lineGraph';
+import ScatterChart from '../../components/scatterGraph';
+
 import { useRouter } from 'expo-router';
 
 const { width } = Dimensions.get('window');
-
-// const router = useRouter();
 
 // Responsive chart width and height
 const chartWidth = width * 0.9;  // 90% of screen width, not full screen width
 const chartHeight = chartWidth * 0.5;  // 50% of chart width
 
-// Function to generate random fluctuations for data points
-const addFluctuations = (data, fluctuationRange = 5) => {
-  return data.map((point) => ({
-    ...point,
-    y: point.y + (Math.random() * fluctuationRange - fluctuationRange / 2), // Random fluctuation within the range
-  }));
-};
-
 const RunsVisualization = () => {
+
+  const statsData = [
+    [
+      { title: 'Last Week Cardio Sessions:', value: 3 },
+      { title: 'Total Runs This Year:', value: 30 },
+    ],
+    [
+      { title: 'Avg. Cardio Duration:', value: '45 mins' },
+      { title: 'Total Miles:', value: '300' },
+    ],
+  ];
+  
   const [activeIndex, setActiveIndex] = useState(0);  // Active index for the slide
 
   const router = useRouter();
 
-  // Base data: Time (in seconds or Unix timestamps) and heart rate values (120-180)
-  const heartRateData = [
-    { x: new Date(2024, 0, 1, 12, 0, 0), y: 130 },
-    { x: new Date(2024, 0, 1, 12, 1, 0), y: 80 },
-    { x: new Date(2024, 0, 1, 12, 2, 0), y: 160 },
-    { x: new Date(2024, 0, 1, 12, 3, 0), y: 148 },
-    { x: new Date(2024, 0, 1, 12, 4, 0), y: 170 },
+  const WorkoutCountData = [
+    { x: new Date(2024, 0, 3), y: 7 }, 
+    { x: new Date(2024, 3, 9), y: 4 }, 
+    { x: new Date(2024, 6, 20), y: 2 }, 
+    { x: new Date(2024, 9, 8), y: 6 }, 
+    { x: new Date(2024, 11, 3), y: 9 },
+    { x: new Date(2024, 0, 4), y: 9 }, 
+    { x: new Date(2024, 3, 24), y: 2 }, 
+    { x: new Date(2024, 6, 3), y: 0 }, 
+    { x: new Date(2024, 9, 19), y: 10 }, 
+    { x: new Date(2024, 11, 21), y: 2 },  
+  ];
+  
+  const workoutVolumeData = [
+    { x: new Date(2024, 0, 3), y: 300 }, 
+    { x: new Date(2024, 3, 9), y: 600 }, 
+    { x: new Date(2024, 6, 20), y: 450 }, 
+    { x: new Date(2024, 9, 8), y: 100 }, 
+    { x: new Date(2024, 11, 3), y: 650 },
+    { x: new Date(2024, 0, 4), y: 350 }, 
+    { x: new Date(2024, 3, 24), y: 400 }, 
+    { x: new Date(2024, 6, 3), y: 390 }, 
+    { x: new Date(2024, 9, 19), y: 150 }, 
+    { x: new Date(2024, 11, 21), y: 260 }, 
+  ];
+  const benchPressMax = [
+    { x: new Date(2024, 0, 3), y: 180 }, 
+    { x: new Date(2024, 3, 9), y: 200 }, 
+    { x: new Date(2024, 6, 20), y: 210 }, 
+    { x: new Date(2024, 9, 8), y: 190 }, 
+    { x: new Date(2024, 11, 3), y: 230 },
+    { x: new Date(2024, 0, 4), y: 240 }, 
+    { x: new Date(2024, 3, 24), y: 235 }, 
+    { x: new Date(2024, 6, 3), y: 240 }, 
+    { x: new Date(2024, 9, 19), y: 235 }, 
+    { x: new Date(2024, 11, 21), y: 241 }, 
+  ];
+  const squatMax = [
+    { x: new Date(2024, 0, 3), y: 180 }, 
+    { x: new Date(2024, 3, 9), y: 220 }, 
+    { x: new Date(2024, 6, 20), y: 245 }, 
+    { x: new Date(2024, 9, 8), y: 300 }, 
+    { x: new Date(2024, 11, 3), y: 290 },
+    { x: new Date(2024, 0, 4), y: 305 }, 
+    { x: new Date(2024, 3, 24), y: 320 }, 
+    { x: new Date(2024, 6, 3), y: 315 }, 
+    { x: new Date(2024, 9, 19), y: 325 }, 
+    { x: new Date(2024, 11, 21), y: 330 }, 
   ];
 
-  // Base pace data (in minutes per km or miles)
-  const paceData = [
-    { x: new Date(2024, 0, 1, 12, 0, 0), y: 5.3 },  // Pace in minutes/km
-    { x: new Date(2024, 0, 1, 12, 1, 0), y: 5.2 },
-    { x: new Date(2024, 0, 1, 12, 2, 0), y: 3.1 },
-    { x: new Date(2024, 0, 1, 12, 3, 0), y: 4.3 },
-    { x: new Date(2024, 0, 1, 12, 4, 0), y: 4.0 },
-  ];
   const [chatbotResponse, setChatbotResponse] = useState(null);
 
   const handleChatResponse = (response) => {
     setChatbotResponse(response); // Update chatbot response
   };
-  const handleAddRun = () => {
-    console.log('Add run button pressed!');
-  };
-
-  // Add fluctuations to data
-  const fluctuatedHeartRateData = addFluctuations(heartRateData, 5); // Fluctuation range for heart rate
-  const fluctuatedPaceData = addFluctuations(paceData, 0.2); // Fluctuation range for pace (in minutes/km)
-
-  // Pie chart data (e.g., breakdown of activity types during the run)
-  const pieData = [
-    { x: 'Very Light', y: 20 },
-    { x: 'Light', y: 20 },
-    { x: 'Moderate', y: 30 },
-    { x: 'High', y: 20 },
-    { x: 'Maximum', y: 10 },
-  ];
-  const chartsData = [
-    {
-      id: 1,
-      component: (
-        <VictoryChart theme={VictoryTheme.material} width={chartWidth} height={chartHeight} domainPadding={20}>
-
-            <VictoryLabel
-                text="Heart Rate Over Time"
-                x={170} // Positioning the label (adjust x for center, y for height)
-                y={20} // Position it above the chart
-                style={{
-                fontSize: 16,
-                fontWeight: 'bold',
-                fill: Colors.colors.text,
-                textAnchor: 'middle',  // Center the title
-                }}
-            />
-          <VictoryAxis
-            tickFormat={(t) => new Date(t).toLocaleTimeString()} // Format time on x-axis
-            tickCount={3}
-            style={{
-              axis: { stroke: Colors.colors.text },
-              axisLabel: { fontSize: 12, padding: 30, fill: Colors.colors.text },
-              ticks: { stroke: Colors.colors.text, size: 5 },
-              tickLabels: { fontSize: 10, fill: Colors.colors.text },
-              grid: { stroke: 'none' }, // Remove gridlines
-            }}
-          />
-          <VictoryAxis
-            dependentAxis
-            domain={[120, 180]} // Set the y-axis range from 120 to 180
-            tickCount={4}
-            style={{
-              axis: { stroke: Colors.colors.text },
-              axisLabel: { fontSize: 10, padding: 30, fill: Colors.colors.text },
-              ticks: { stroke: Colors.colors.text, size: 5 },
-              tickLabels: { fontSize: 10, fill: Colors.colors.text },
-              grid: { stroke: 'none' }, // Remove gridlines
-            }}
-          />
-          {/* Add shaded area under the line */}
-          <VictoryArea
-            data={fluctuatedHeartRateData}
-            style={{
-              data: { fill: 'blue', fillOpacity: 0.2 },  // Blue shading under the line with some opacity
-            }}
-          />
-          <VictoryLine
-            data={fluctuatedHeartRateData}
-            style={{
-              data: { stroke: 'blue', strokeWidth: 3 },
-            }}
-          />
-          {/* Add markers on the data points */}
-          <VictoryScatter
-            data={fluctuatedHeartRateData}
-            size={3}
-            style={{
-              data: { fill: 'lightblue' }, // Marker color
-            }}
-          />
-        </VictoryChart>
-      ),
-    },
-    {
-      id: 2,
-      component: (
-        <VictoryChart theme={VictoryTheme.material} width={chartWidth} height={chartHeight} domainPadding={20}>
-            <VictoryLabel
-                text="Pace Over Time"
-                x={170} // Positioning the label (adjust x for center, y for height)
-                y={20} // Position it above the chart
-                style={{
-                fontSize: 16,
-                fontWeight: 'bold',
-                fill: Colors.colors.text,
-                textAnchor: 'middle',  // Center the title
-                }}
-            />
-          <VictoryAxis
-            tickFormat={(t) => new Date(t).toLocaleTimeString()} // Format time on x-axis
-            tickCount={4}
-            style={{
-              axis: { stroke: Colors.colors.text },
-              axisLabel: { fontSize: 12, padding: 10, fill: Colors.colors.text },
-              ticks: { stroke: Colors.colors.text, size: 5 },
-              tickLabels: { fontSize: 10, fill: Colors.colors.text },
-              grid: { stroke: 'none' }, // Remove gridlines
-            }}
-          />
-          <VictoryAxis
-            dependentAxis
-            // label="Pace (min/km)"
-            tickCount={4}
-            style={{
-              axis: { stroke: Colors.colors.text },
-              axisLabel: { fontSize: 12, padding: 30, fill: Colors.colors.text },
-              ticks: { stroke: Colors.colors.text, size: 5 },
-              tickLabels: { fontSize: 10, fill: Colors.colors.text },
-              grid: { stroke: 'none' }, // Remove gridlines
-            }}
-          />
-          {/* Add shaded area under the line */}
-          <VictoryArea
-            data={fluctuatedPaceData}
-            style={{
-              data: { fill: 'green', fillOpacity: 0.2 },  // Green shading under the line with some opacity
-            }}
-          />
-          <VictoryLine
-            data={fluctuatedPaceData}
-            style={{
-              data: { stroke: 'green', strokeWidth: 3 },
-            }}
-          />
-          {/* Add markers on the data points */}
-          <VictoryScatter
-            data={fluctuatedPaceData}
-            size={3}
-            style={{
-              data: { fill: 'lightgreen' }, // Marker color
-            }}
-          />
-        </VictoryChart>
-      ),
-    },
-  ];
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Your Last Run</Text>
-
-      {/* Total Duration and Calories Burned Containers */}
-      <View style={styles.infoContainer}>
-      <View>
-        <Text style={styles.infoText}>
-            <Text style={styles.boldText}>Distance: </Text> 
-            <Text style={styles.highlightText}>2 miles</Text>
-        </Text>
-        <Text style={styles.infoText}>
-            <Text style={styles.boldText}>Duration: </Text> 
-            <Text style={styles.highlightText}>25 mins</Text>
-        </Text>
-        <Text style={styles.infoText}>
-            <Text style={styles.boldText}>Calories Burned: </Text> 
-            <Text style={styles.highlightText}>300 kcal</Text>
-        </Text>
-        </View>
-
-        {/* Pie Chart */}
-        <View style={styles.pieChartContainer}>
-          <View style={styles.pieChartTitleContainer}>
-            <Text style={styles.pieChartTitle}> Heart Rate Zones</Text>
-          </View>
-          <View style={styles.pieBox}>
-            {/* Legend */}
-            <View style={styles.legendContainer}>
-              {pieData.map((entry, index) => (
-                <View style={styles.legendItem} key={index}>
-                  <View style={[styles.legendColor, { backgroundColor: ['#FFFFFF', '#6D6DFF', '#FFB84D', '#4CAF50', '#F44336'][index] }]} />
-                  <Text style={styles.legendLabel}>{entry.x}</Text>
-                </View>
-              ))}
-            </View>
-            <VictoryPie
-              data={pieData}
-              colorScale={['#FFFFFF', '#6D6DFF', '#FFB84D', '#4CAF50', '#F44336']}  // Different colors for each section
-              style={{
-                labels: { fontSize: 6, fill: 'black', fontWeight: 'bold'},
-              }}
-              innerRadius={40}  // Donut style
-              labelRadius={27}  // Adjust label positioning
-              width={150}  // Pie chart size
-              height={150}
-              labels={({ datum }) => `${datum.y}%`} 
-            />
-          </View>
-        </View>
+      {/* Your Workouts Title */}
+      <View style={styles.title}>
+        <Text style={styles.text}>Cardio Sessions</Text>
+        <TouchableOpacity 
+          onPress={() => router.push('/cardioHistory')} 
+          style={styles.iconContainer}
+        >
+          <Ionicons name="list" size={34} color={Colors.colors.text} />
+        </TouchableOpacity>
       </View>
-      {/* Typewriter Effect */}
+      
+      <StatsContainers stats={statsData} />
       <View style={styles.chatTextContainer}>
         <Text>
           <TypeWriter typing={1} style={styles.chatText}>
@@ -255,58 +114,48 @@ const RunsVisualization = () => {
           </TypeWriter>
         </Text>
       </View>
-      <View style={styles.dotsContainer}>
-            {chartsData.map((_, index) => (
-            <View
-                key={index}
-                style={[
-                styles.dot,
-                activeIndex === index && styles.activeDot,
-                ]}
-            />
-            ))}
-        </View>
-
-      {/* Scrollable container for charts */}
+     {/* Scrollable Charts */}
       <ScrollView
         horizontal
         pagingEnabled
         style={styles.chartContainer}
         onScroll={(event) => {
-            const contentOffsetX = event.nativeEvent.contentOffset.x;
-            const index = Math.floor(contentOffsetX / chartWidth); // Get the index based on the scroll position
-            setActiveIndex(index);  // Update the active index
+          const contentOffsetX = event.nativeEvent.contentOffset.x;
+          const index = Math.floor(contentOffsetX / chartWidth);
+          setActiveIndex(index);
         }}
         showsHorizontalScrollIndicator={false}
-        >
-        {chartsData.map((item) => (
-            <View style={styles.chartBox} key={item.id}>
-            {item.component}
-            </View>
-        ))}
-       </ScrollView>
-
-      {/* Dots */}
-      <View style={styles.dotsContainer}>
-        {chartsData.map((_, index) => (
-          <View
-            key={index}
-            style={[
-              styles.dot,
-              activeIndex === index && styles.activeDot,
-            ]}
-          />
-        ))}
+      >
+        <BarChart
+          Title="Cardio Sessions Over Time"
+          Data={WorkoutCountData}
+          Domain={[0, 1]}
+          ChartWidth={330}
+          ChartHeight={195}
+          BarColor="green" // You can pass a custom color here
+        />
+        <LineChart
+          Title="Calories Burned"
+          Data={workoutVolumeData}
+          Domain={[0, 1]}
+          ChartWidth={330}
+          ChartHeight={195}
+          LineColor="green"
+          MarkerColor="orange"
+        />
+      </ScrollView>  
+      <View style={styles.bottomContainer}>
+        <Text style={styles.bottomtext}>Singe Sessions</Text>
       </View>
-      <View style={{ width: '100%' }}>
-        <Text style={styles.bottomtext}>Past Runs</Text>
-      </View>
+  
       {/* Floating Button */}
       <ChatButton onResponse={handleChatResponse} /> {/* Pass handleChatResponse to ChatButton */}
       {/* AddWorkoutButton */}
-      <AddRunButton onPress={() => router.push('/addRun')} />
+      <AddWorkoutButton onPress={() => router.push('/addWorkout')} />
+
     </View>
-  );
+    
+  );  
 };
 
 // Styles
@@ -316,27 +165,29 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     backgroundColor: Colors.colors.background,
-    paddingLeft: 20,
+    paddingLeft: 10,
+    paddingRight: 10,
     paddingTop: 20,
+  },
+  title: {
+    marginTop: 0,  // Adjust this value to set the top margin of the title
+    marginBottom: 5, // Add this line to create space between the title and widgets
+    marginLeft: 30,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+  },
+  iconContainer: {
+    marginRight:50,
+    marginTop: 60,
   },
   text: {
     fontSize: 24,
     fontWeight: 'bold',
     color: Colors.colors.text,
     marginTop: 60,
-    marginLeft: 90,
-  },
-  infoContainer: {
-    marginTop: 10,
-    marginBottom: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  infoText: {
-    fontSize: 14,
-    color: '#000',
-    marginBottom: 5,
+    marginLeft: 60,
   },
   boldText: {
     color: Colors.colors.text,
@@ -347,8 +198,10 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',  // Regular weight for the highlighted text
   },
   chatTextContainer: {
-    marginTop: 0,
-    marginBottom: 10,
+    height: 50,
+    marginTop: -20,
+    marginBottom: -10,
+    marginLeft: 10,
   },
   chatText: {
     fontSize: 14,
@@ -361,11 +214,12 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
   bottomtext: {
-    backgroundColor: Colors.colors.grey,
+    backgroundColor: Colors.colors.dark,
     color: 'white',
     fontSize: 18,
-    marginTop: 60,
-    marginBottom: 100,
+    // marginTop: 60,
+    // marginBottom: 20,
+    marginLeft: 120,
   },
   chartBox: {
     backgroundColor: Colors.colors.grey,
@@ -379,72 +233,41 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
   },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',  // Optional: space out the widgets evenly
+    width: '95%',
+    marginBottom: 10,  // Optional: space between rows
+  },
+  widget: {
+    width: '48%',  // Take up 50% of the row width with some padding
+    padding: 10,
+    height: 60,
+    backgroundColor: Colors.colors.grey,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  widgetTitleText: {
+    color: 'white',
+    fontSize: 14,
+  },
+  widgetValueText: {
+    color: 'cyan',
+    fontSize: 30,
+    fontWeight: 500,
+    fontFamily: 'Helvetica Neue',
+  },
   chartContainer: {
     width: chartWidth,
-    height: chartHeight + 60,
+    height: chartHeight + 10,
     marginBottom: 10,
   },
-  pieChartContainer: {
-    backgroundColor: Colors.colors.grey,
-    borderRadius: 10,
-    // padding: 20,
-    paddingRight: 10,
-    paddingLeft: 40,
-    marginTop: 30,
-    marginLeft: 15,
-    width: 160,
-    height: 130,
-    justifyContent: 'center',  // Center the pie chart inside the container
-    alignItems: 'center', 
-    // flexDirection: 'row',
-  },
-  pieChartTitleContainer: {
-    marginBottom: -30,
-    marginRight: -30,
-  },
-  pieChartTitle: {
-    color: 'white',
-    marginBottom: 10,
-    marginLeft: -70,
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  pieBox: {
-    marginTop: 0,
-    flexDirection: 'row',
-    marginBottom: -30,
-  },
-  legendContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap', // Allows the items to wrap to the next line if needed
-    marginTop: 30, // Adjust spacing as needed
-    justifyContent: 'flex-start', // Align items to the left
-    width: '30%', // Ensure it takes full width
-    paddingHorizontal: 0, // Add padding for spacing
-    marginRight: 0,
-  },
-  legendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 0, // Space between each legend item
-    marginBottom: 5, // Space between rows
-  },
-  
-  legendColor: {
-    width: 10, // Adjust the size of the color box
-    height: 10, // Adjust the size of the color box
-    marginRight: 5, // Space between the color box and label
-  },
-  
-  legendLabel: {
-    fontSize: 8, // Adjust font size
-    color: Colors.colors.text, // Ensure text color is visible
-  },  
   dotsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     position: 'absolute',  // Use absolute positioning to place the dots at the bottom
-    bottom: 243,             // Position it at the bottom of the container
+    bottom: 230,             // Position it at the bottom of the container
     left: 0,               // Align the dots from the left
     right: 15,              // Align the dots to the right
     marginBottom: 0,     // Add a little space between the chart and the dots
@@ -475,6 +298,21 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
   },
+  textContainer: {
+        // alignItems: 'center',
+        marginTop: 0, 
+  },
+  textLine: {
+    fontSize: 18, // Adjust font size as needed
+    fontWeight: 'bold', // Optional: Make the text bold
+    color: Colors.colors.text, // Matches your theme color
+  },
+  bottomContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 15,
+  }
 });
 
 export default RunsVisualization;

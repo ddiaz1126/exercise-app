@@ -8,6 +8,7 @@ import TypeWriter from 'react-native-typewriter';
 import ChatButton from '../../components/ChatButton'; 
 import AddWorkoutButton from '../../components/addWorkoutButton';
 import { useRouter } from 'expo-router';
+import StatsContainers from '../../components/statsContainers';
 
 const { width } = Dimensions.get('window');
 
@@ -19,6 +20,17 @@ const Workouts = () => {
   const [activeIndex, setActiveIndex] = useState(0);  // Active index for the slide
 
   const router = useRouter();
+
+  const statsData = [
+    [
+      { title: 'Last Week Workouts:', value: 2 },
+      { title: 'Total Workouts:', value: 30 },
+    ],
+    [
+      { title: 'Avg. Workout Duration:', value: '45 mins' },
+      { title: 'Total Weight Lifted:', value: '50k lbs' },
+    ],
+  ];
 
   const WorkoutCountData = [
     { x: new Date(2024, 0, 3), y: 7 }, 
@@ -317,7 +329,7 @@ const Workouts = () => {
       </View>
   
       {/* Info Container (Widgets) */}
-      <View style={styles.infoContainer}>
+      {/* <View style={styles.infoContainer}>
         <View style={styles.row}>
           <View style={styles.widget}>
             <Text style={styles.widgetTitleText}>Last Week Workouts:</Text>
@@ -339,7 +351,8 @@ const Workouts = () => {
           </View>
         </View>
         
-      </View>
+      </View> */}
+      <StatsContainers stats={statsData} />
       <View style={styles.chatTextContainer}>
         <Text>
           <TypeWriter typing={1} style={styles.chatText}>

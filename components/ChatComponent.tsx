@@ -17,7 +17,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ onResponse }) => {
   const handleChatSubmit = async () => {
     setLoading(true);
     try {
-      const result = await axios.post('http://10.0.0.173:8000/model/chat/', {
+      const result = await axios.post('http://10.0.0.147:8000/model/chat/', {
         query: query,
       });
       setResponse(result.data.response);
